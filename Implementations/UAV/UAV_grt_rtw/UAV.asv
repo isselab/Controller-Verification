@@ -1,0 +1,413 @@
+/*
+ * UAV.cpp
+ *
+ * Academic License - for use in teaching, academic research, and meeting
+ * course requirements at degree granting institutions only.  Not for
+ * government, commercial, or other organizational use.
+ *
+ * Code generation for model "UAV".
+ *
+ * Model version              : 1.11
+ * Simulink Coder version : 24.2 (R2024b) 21-Jun-2024
+ * C++ source code generated on : Mon Mar 31 17:31:06 2025
+ *
+ * Target selection: grt.tlc
+ * Note: GRT includes extra infrastructure and instrumentation for prototyping
+ * Embedded hardware selection: Intel->x86-64 (Windows64)
+ * Code generation objectives: Unspecified
+ * Validation result: Not run
+ */
+
+#include "UAV.h"
+#include "rtwtypes.h"
+#include "UAV_private.h"
+
+/*
+ * This function updates continuous states using the ODE3 fixed-step
+ * solver algorithm
+ */
+void UAV::rt_ertODEUpdateContinuousStates(RTWSolverInfo *si )
+{
+  /* Solver Matrices */
+  static const real_T rt_ODE3_A[3]{
+    1.0/2.0, 3.0/4.0, 1.0
+  };
+
+  static const real_T rt_ODE3_B[3][3]{
+    { 1.0/2.0, 0.0, 0.0 },
+
+    { 0.0, 3.0/4.0, 0.0 },
+
+    { 2.0/9.0, 1.0/3.0, 4.0/9.0 }
+  };
+
+  time_T t { rtsiGetT(si) };
+
+  time_T tnew { rtsiGetSolverStopTime(si) };
+
+  time_T h { rtsiGetStepSize(si) };
+
+  real_T *x { rtsiGetContStates(si) };
+
+  ODE3_IntgData *id { static_cast<ODE3_IntgData *>(rtsiGetSolverData(si)) };
+
+  real_T *y { id->y };
+
+  real_T *f0 { id->f[0] };
+
+  real_T *f1 { id->f[1] };
+
+  real_T *f2 { id->f[2] };
+
+  real_T hB[3];
+  int_T i;
+  int_T nXc { 5 };
+
+  rtsiSetSimTimeStep(si,MINOR_TIME_STEP);
+
+  /* Save the state values at time t in y, we'll use x as ynew. */
+  (void) std::memcpy(y, x,
+                     static_cast<uint_T>(nXc)*sizeof(real_T));
+
+  /* Assumes that rtsiSetT and ModelOutputs are up-to-date */
+  /* f0 = f(t,y) */
+  rtsiSetdX(si, f0);
+  UAV_derivatives();
+
+  /* f(:,2) = feval(odefile, t + hA(1), y + f*hB(:,1), args(:)(*)); */
+  hB[0] = h * rt_ODE3_B[0][0];
+  for (i = 0; i < nXc; i++) {
+    x[i] = y[i] + (f0[i]*hB[0]);
+  }
+
+  rtsiSetT(si, t + h*rt_ODE3_A[0]);
+  rtsiSetdX(si, f1);
+  this->step();
+  UAV_derivatives();
+
+  /* f(:,3) = feval(odefile, t + hA(2), y + f*hB(:,2), args(:)(*)); */
+  for (i = 0; i <= 1; i++) {
+    hB[i] = h * rt_ODE3_B[1][i];
+  }
+
+  for (i = 0; i < nXc; i++) {
+    x[i] = y[i] + (f0[i]*hB[0] + f1[i]*hB[1]);
+  }
+
+  rtsiSetT(si, t + h*rt_ODE3_A[1]);
+  rtsiSetdX(si, f2);
+  this->step();
+  UAV_derivatives();
+
+  /* tnew = t + hA(3);
+     ynew = y + f*hB(:,3); */
+  for (i = 0; i <= 2; i++) {
+    hB[i] = h * rt_ODE3_B[2][i];
+  }
+
+  for (i = 0; i < nXc; i++) {
+    x[i] = y[i] + (f0[i]*hB[0] + f1[i]*hB[1] + f2[i]*hB[2]);
+  }
+
+  rtsiSetT(si, tnew);
+  rtsiSetSimTimeStep(si,MAJOR_TIME_STEP);
+}
+
+/* Model step function */
+void UAV::step()
+{
+  real_T rtb_step, rtb_error;
+  if (rtmIsMajorTimeStep((&UAV_M))) {
+    /* set solver stop time */
+    if (!((&UAV_M)->Timing.clockTick0+1)) {
+      rtsiSetSolverStopTime(&(&UAV_M)->solverInfo, (((&UAV_M)
+        ->Timing.clockTickH0 + 1) * (&UAV_M)->Timing.stepSize0 * 4294967296.0));
+    } else {
+      rtsiSetSolverStopTime(&(&UAV_M)->solverInfo, (((&UAV_M)->Timing.clockTick0
+        + 1) * (&UAV_M)->Timing.stepSize0 + (&UAV_M)->Timing.clockTickH0 *
+        (&UAV_M)->Timing.stepSize0 * 4294967296.0));
+    }
+  }                                    /* end MajorTimeStep */
+
+  /* Update absolute time of base rate at minor time step */
+  if (rtmIsMinorTimeStep((&UAV_M))) {
+    (&UAV_M)->Timing.t[0] = rtsiGetT(&(&UAV_M)->solverInfo);
+  }
+
+  /* TransferFcn: '<Root>/Transfer Fcn' */
+  UAV_B.Ys = 0.0;
+  UAV_B.Ys += UAV_P.TransferFcn_C[0] * UAV_X.TransferFcn_CSTATE[0];
+  UAV_B.Ys += UAV_P.TransferFcn_C[1] * UAV_X.TransferFcn_CSTATE[1];
+  UAV_B.Ys += UAV_P.TransferFcn_C[2] * UAV_X.TransferFcn_CSTATE[2];
+  if (rtmIsMajorTimeStep((&UAV_M))) {
+    /* Scope: '<Root>/Scope' */
+    if (rtmIsMajorTimeStep((&UAV_M))) {
+      real_T u[2];
+      u[0] = ((((&UAV_M)->Timing.clockTick1+(&UAV_M)->Timing.clockTickH1*
+                4294967296.0)) * 0.0001)
+        ;
+      u[1] = UAV_B.Ys;
+      rt_UpdateLogVar((LogVar *)UAV_DW.Scope_PWORK.LoggedData, u, 0);
+    }
+  }
+
+  /* Step: '<Root>/Step' */
+  if ((&UAV_M)->Timing.t[0] < UAV_P.angle_change_start_time) {
+    rtb_step = UAV_P.initial_angle;
+  } else {
+    rtb_step = UAV_P.final_angle;
+  }
+
+  /* Sum: '<Root>/Sum' incorporates:
+   *  Step: '<Root>/Step'
+   */
+  rtb_error = rtb_step - UAV_B.Ys;
+
+  /* Gain: '<S33>/Integral Gain' */
+  UAV_B.IntegralGain = UAV_P.Ki * rtb_error;
+
+  /* Gain: '<S39>/Filter Coefficient' incorporates:
+   *  Gain: '<S29>/Derivative Gain'
+   *  Integrator: '<S31>/Filter'
+   *  Sum: '<S31>/SumD'
+   */
+  UAV_B.FilterCoefficient = (UAV_P.Kd * rtb_error - UAV_X.Filter_CSTATE) *
+    UAV_P.PIDController_N;
+
+  /* Sum: '<S45>/Sum' incorporates:
+   *  Gain: '<S41>/Proportional Gain'
+   *  Integrator: '<S36>/Integrator'
+   */
+  UAV_B.Sum = (UAV_P.Kp * rtb_error + UAV_X.Integrator_CSTATE) +
+    UAV_B.FilterCoefficient;
+
+
+
+  time_T timing = rtsiGetT(&(&UAV_M)->solverInfo);
+  /* 
+  *
+  * Pass values to the Observer
+  * The error of the system is captured by the variable:        rtb_error (step - actual value)
+  * The reference is captrued by the variable:                  rtb_step (Value of the step function)
+  * The output of the system is captured by the variable:       UAV_B.Ys
+  * 
+  */
+  ObserverFSM.setExternalInput(rtb_step, rtb_error, UAV_B, timing);
+  ObserverFSM.transition();
+
+
+
+
+  if (rtmIsMajorTimeStep((&UAV_M))) {
+    /* Matfile logging */
+    rt_UpdateTXYLogVars((&UAV_M)->rtwLogInfo, ((&UAV_M)->Timing.t));
+  }                                    /* end MajorTimeStep */
+
+  if (rtmIsMajorTimeStep((&UAV_M))) {
+    /* signal main to stop simulation */
+    {                                  /* Sample time: [0.0s, 0.0s] */
+      if ((rtmGetTFinal((&UAV_M))!=-1) &&
+          !((rtmGetTFinal((&UAV_M))-((((&UAV_M)->Timing.clockTick1+(&UAV_M)
+               ->Timing.clockTickH1* 4294967296.0)) * 0.0001)) > ((((&UAV_M)
+              ->Timing.clockTick1+(&UAV_M)->Timing.clockTickH1* 4294967296.0)) *
+            0.0001) * (DBL_EPSILON))) {
+        rtmSetErrorStatus((&UAV_M), "Simulation finished");
+      }
+    }
+
+    rt_ertODEUpdateContinuousStates(&(&UAV_M)->solverInfo);
+
+    /* Update absolute time for base rate */
+    /* The "clockTick0" counts the number of times the code of this task has
+     * been executed. The absolute time is the multiplication of "clockTick0"
+     * and "Timing.stepSize0". Size of "clockTick0" ensures timer will not
+     * overflow during the application lifespan selected.
+     * Timer of this task consists of two 32 bit unsigned integers.
+     * The two integers represent the low bits Timing.clockTick0 and the high bits
+     * Timing.clockTickH0. When the low bit overflows to 0, the high bits increment.
+     */
+    if (!(++(&UAV_M)->Timing.clockTick0)) {
+      ++(&UAV_M)->Timing.clockTickH0;
+    }
+
+    (&UAV_M)->Timing.t[0] = rtsiGetSolverStopTime(&(&UAV_M)->solverInfo);
+
+    {
+      /* Update absolute timer for sample time: [0.0001s, 0.0s] */
+      /* The "clockTick1" counts the number of times the code of this task has
+       * been executed. The resolution of this integer timer is 0.0001, which is the step size
+       * of the task. Size of "clockTick1" ensures timer will not overflow during the
+       * application lifespan selected.
+       * Timer of this task consists of two 32 bit unsigned integers.
+       * The two integers represent the low bits Timing.clockTick1 and the high bits
+       * Timing.clockTickH1. When the low bit overflows to 0, the high bits increment.
+       */
+      (&UAV_M)->Timing.clockTick1++;
+      if (!(&UAV_M)->Timing.clockTick1) {
+        (&UAV_M)->Timing.clockTickH1++;
+      }
+    }
+  }                                    /* end MajorTimeStep */
+}
+
+/* Derivatives for root system: '<Root>' */
+void UAV::UAV_derivatives()
+{
+  XDot_UAV_T *_rtXdot;
+  _rtXdot = ((XDot_UAV_T *) (&UAV_M)->derivs);
+
+  /* Derivatives for TransferFcn: '<Root>/Transfer Fcn' */
+  _rtXdot->TransferFcn_CSTATE[0] = UAV_P.TransferFcn_A[0] *
+    UAV_X.TransferFcn_CSTATE[0];
+  _rtXdot->TransferFcn_CSTATE[0] += UAV_P.TransferFcn_A[1] *
+    UAV_X.TransferFcn_CSTATE[1];
+  _rtXdot->TransferFcn_CSTATE[0] += UAV_P.TransferFcn_A[2] *
+    UAV_X.TransferFcn_CSTATE[2];
+  _rtXdot->TransferFcn_CSTATE[1] = UAV_X.TransferFcn_CSTATE[0];
+  _rtXdot->TransferFcn_CSTATE[2] = UAV_X.TransferFcn_CSTATE[1];
+  _rtXdot->TransferFcn_CSTATE[0] += UAV_B.Sum;
+
+  /* Derivatives for Integrator: '<S31>/Filter' */
+  _rtXdot->Filter_CSTATE = UAV_B.FilterCoefficient;
+
+  /* Derivatives for Integrator: '<S36>/Integrator' */
+  _rtXdot->Integrator_CSTATE = UAV_B.IntegralGain;
+}
+
+/* Model initialize function */
+void UAV::initialize()
+{
+  /* Registration code */
+  {
+    /* Setup solver object */
+    rtsiSetSimTimeStepPtr(&(&UAV_M)->solverInfo, &(&UAV_M)->Timing.simTimeStep);
+    rtsiSetTPtr(&(&UAV_M)->solverInfo, &rtmGetTPtr((&UAV_M)));
+    rtsiSetStepSizePtr(&(&UAV_M)->solverInfo, &(&UAV_M)->Timing.stepSize0);
+    rtsiSetdXPtr(&(&UAV_M)->solverInfo, &(&UAV_M)->derivs);
+    rtsiSetContStatesPtr(&(&UAV_M)->solverInfo, (real_T **) &(&UAV_M)
+                         ->contStates);
+    rtsiSetNumContStatesPtr(&(&UAV_M)->solverInfo, &(&UAV_M)
+      ->Sizes.numContStates);
+    rtsiSetNumPeriodicContStatesPtr(&(&UAV_M)->solverInfo, &(&UAV_M)
+      ->Sizes.numPeriodicContStates);
+    rtsiSetPeriodicContStateIndicesPtr(&(&UAV_M)->solverInfo, &(&UAV_M)
+      ->periodicContStateIndices);
+    rtsiSetPeriodicContStateRangesPtr(&(&UAV_M)->solverInfo, &(&UAV_M)
+      ->periodicContStateRanges);
+    rtsiSetContStateDisabledPtr(&(&UAV_M)->solverInfo, (boolean_T**) &(&UAV_M)
+      ->contStateDisabled);
+    rtsiSetErrorStatusPtr(&(&UAV_M)->solverInfo, (&rtmGetErrorStatus((&UAV_M))));
+    rtsiSetRTModelPtr(&(&UAV_M)->solverInfo, (&UAV_M));
+  }
+
+  rtsiSetSimTimeStep(&(&UAV_M)->solverInfo, MAJOR_TIME_STEP);
+  rtsiSetIsMinorTimeStepWithModeChange(&(&UAV_M)->solverInfo, false);
+  rtsiSetIsContModeFrozen(&(&UAV_M)->solverInfo, false);
+  (&UAV_M)->intgData.y = (&UAV_M)->odeY;
+  (&UAV_M)->intgData.f[0] = (&UAV_M)->odeF[0];
+  (&UAV_M)->intgData.f[1] = (&UAV_M)->odeF[1];
+  (&UAV_M)->intgData.f[2] = (&UAV_M)->odeF[2];
+  (&UAV_M)->contStates = ((X_UAV_T *) &UAV_X);
+  (&UAV_M)->contStateDisabled = ((XDis_UAV_T *) &UAV_XDis);
+  (&UAV_M)->Timing.tStart = (0.0);
+  rtsiSetSolverData(&(&UAV_M)->solverInfo, static_cast<void *>(&(&UAV_M)
+    ->intgData));
+  rtsiSetSolverName(&(&UAV_M)->solverInfo,"ode3");
+  rtmSetTPtr((&UAV_M), &(&UAV_M)->Timing.tArray[0]);
+  rtmSetTFinal((&UAV_M), 2.0);
+  (&UAV_M)->Timing.stepSize0 = 0.0001;
+
+  /* Setup for data logging */
+  {
+    static RTWLogInfo rt_DataLoggingInfo;
+    rt_DataLoggingInfo.loggingInterval = (nullptr);
+    (&UAV_M)->rtwLogInfo = &rt_DataLoggingInfo;
+  }
+
+  /* Setup for data logging */
+  {
+    rtliSetLogXSignalInfo((&UAV_M)->rtwLogInfo, (nullptr));
+    rtliSetLogXSignalPtrs((&UAV_M)->rtwLogInfo, (nullptr));
+    rtliSetLogT((&UAV_M)->rtwLogInfo, "tout");
+    rtliSetLogX((&UAV_M)->rtwLogInfo, "");
+    rtliSetLogXFinal((&UAV_M)->rtwLogInfo, "");
+    rtliSetLogVarNameModifier((&UAV_M)->rtwLogInfo, "rt_");
+    rtliSetLogFormat((&UAV_M)->rtwLogInfo, 4);
+    rtliSetLogMaxRows((&UAV_M)->rtwLogInfo, 0);
+    rtliSetLogDecimation((&UAV_M)->rtwLogInfo, 1);
+    rtliSetLogY((&UAV_M)->rtwLogInfo, "");
+    rtliSetLogYSignalInfo((&UAV_M)->rtwLogInfo, (nullptr));
+    rtliSetLogYSignalPtrs((&UAV_M)->rtwLogInfo, (nullptr));
+  }
+
+  /* Matfile logging */
+  rt_StartDataLoggingWithStartTime((&UAV_M)->rtwLogInfo, 0.0, rtmGetTFinal
+    ((&UAV_M)), (&UAV_M)->Timing.stepSize0, (&rtmGetErrorStatus((&UAV_M))));
+
+  /* SetupRuntimeResources for Scope: '<Root>/Scope' */
+  {
+    int_T numCols = 2;
+    UAV_DW.Scope_PWORK.LoggedData = rt_CreateLogVar(
+      (&UAV_M)->rtwLogInfo,
+      0.0,
+      rtmGetTFinal((&UAV_M)),
+      (&UAV_M)->Timing.stepSize0,
+      (&rtmGetErrorStatus((&UAV_M))),
+      "yout",
+      SS_DOUBLE,
+      0,
+      0,
+      0,
+      2,
+      1,
+      (int_T *)&numCols,
+      NO_LOGVALDIMS,
+      (nullptr),
+      (nullptr),
+      0,
+      1,
+      0.0001,
+      1);
+    if (UAV_DW.Scope_PWORK.LoggedData == (nullptr))
+      return;
+  }
+
+  /* InitializeConditions for TransferFcn: '<Root>/Transfer Fcn' */
+  UAV_X.TransferFcn_CSTATE[0] = 0.0;
+  UAV_X.TransferFcn_CSTATE[1] = 0.0;
+  UAV_X.TransferFcn_CSTATE[2] = 0.0;
+
+  /* InitializeConditions for Integrator: '<S31>/Filter' */
+  UAV_X.Filter_CSTATE = UAV_P.PIDController_InitialConditionF;
+
+  /* InitializeConditions for Integrator: '<S36>/Integrator' */
+  UAV_X.Integrator_CSTATE = UAV_P.PIDController_InitialConditio_h;
+}
+
+/* Model terminate function */
+void UAV::terminate()
+{
+  /* (no terminate code required) */
+}
+
+/* Constructor */
+UAV::UAV() :
+  UAV_B(),
+  UAV_DW(),
+  UAV_X(),
+  UAV_XDis(),
+  UAV_M(),
+  ObserverFSM()
+{
+  /* Currently there is no constructor body generated.*/
+}
+
+/* Destructor */
+/* Currently there is no destructor body generated.*/
+UAV::~UAV() = default;
+
+/* Real-Time Model get method */
+RT_MODEL_UAV_T * UAV::getRTM()
+{
+  return (&UAV_M);
+}

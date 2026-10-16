@@ -1,0 +1,6 @@
+# ninja log v5
+7	221	7690256140389537	CMakeFiles/satellite_attitude_objects.dir/rt_nonfinite.cpp.obj	ab8a5424f6434a72
+19	232	7690256140513672	CMakeFiles/satellite_attitude.dir/C_/Program_Files/MATLAB/R2024b/rtw/c/src/common/rt_cppclass_main.cpp.obj	8b289f7b57f1e309
+12	308	7690256141260955	CMakeFiles/satellite_attitude_objects.dir/satellite_attitude.cpp.obj	2c50a83fbd5ee2dc
+0	878	7690256146996406	CMakeFiles/satellite_attitude_objects.dir/C_/Program_Files/MATLAB/R2024b/rtw/c/src/rt_logging.c.obj	5639777ad372b698
+879	1029	7690256148071134	satellite_attitude.exe	50b7177427d82285

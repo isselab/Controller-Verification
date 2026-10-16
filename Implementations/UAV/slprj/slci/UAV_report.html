@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
+<head>
+<style type="text/css">
+body {color:black;}
+table.T1 {border-style:solid ;border-color:#EEEEFF;border-width:1px; border-spacing:0;padding:2px;border-collapse:collapse;}table.T0 {border-style:hidden; }TH.th1 { background-color:#EEEEFF;text-align:left;border-style:solid ;border-color:#EEEEFF;border-width:1px; padding:2px;}TD.d1 {border-style:solid ;border-color:#EEEEFF;border-width:1px; text-align:left;padding:2px;}TD.d0 {text-align: left;border-style:none;padding:2px;}.indented {margin-left:25px;}span.ERROR {color:red}
+span.FAILED {color:red}
+span.FAILED_TO_TRACE {color:red}
+span.FAILED_TO_VERIFY {color:red}
+span.JUSTIFIED {color:#0d60a0}
+span.MANUAL {color:#caad00}
+span.NON_FUNCTIONAL {color:black}
+span.NOT_PROCESSED {color:black}
+span.PARTIALLY_PROCESSED {color:#caad00}
+span.PARTIALLY_TRACED {color:#caad00}
+span.PARTIALLY_VERIFIED {color:#caad00}
+span.PASSED {color:green}
+span.TRACED {color:green}
+span.UNABLE_TO_PROCESS {color:#caad00}
+span.UNEXPECTED {color:#caad00}
+span.UNEXPECTEDDEF {color:red}
+span.UNEXPECTEDFUNC {color:red}
+span.UNKNOWN {color:black}
+span.VERIFIED {color:green}
+span.WARNING {color:#caad00}
+span.WAW {color:#caad00}
+span.CODE { white-space: pre;  }
+span.FORMATTED_MSG { white-space: pre;  }
+</style>
+<link rel="stylesheet" type="text/css" href="rtwreport.css" /><script language="JavaScript" type="text/javascript"> 
+ function rtwTableShrink(o, category)
+ {
+    var indent = document.getElementById(category + "_indent");
+    var fileTable = document.getElementById(category + "_table");
+    if (fileTable.style.display == "none") {
+        fileTable.style.display = "";
+        indent.style.display = "";
+        o.innerHTML = '<span style="font-family:monospace" id = "' + category + '_button">[-] </span>';
+    } else {
+        fileTable.style.display = "none";
+        indent.style.display = "none";
+        o.innerHTML = '<span style="font-family:monospace" id = "' + category + '_button">[+] </span>';
+    } 
+ }
+ </script><title>Simulink Code Inspector Report for UAV.slx</title></head>
+<body>
+<div style="text-align:center"> <h2>Simulink Code Inspector Report for <a href="matlab:open_system(slci.internal.encodeString('C:\Users\soure\Desktop\Uni Sachen\CT-Verification\Implementations\UAV\UAV.slx','html','decode'))">UAV.slx</a></h2></div><hr>
+<table class="T0"><TR>
+<TD class="d0">
+<b>Overall Inspection Result : </b></TD>
+<TD class="d0">
+<b><span class="FAILED">Failed</span></b></TD>
+</TR>
+</table><br/><table class="T0"><TR>
+<TD class="d0">
+<span class="FAILED"><span class="FORMATTED_MSG">Inspection of model 'UAV' has been terminated because it has the following fatal incompatibilities:</span></span></TD>
+</TR>
+<TR>
+<TD class="d0">
+<span class="FAILED"><span class="FORMATTED_MSG">The model 'UAV' must not use continuous sample times.</span></span></TD>
+</TR>
+<TR>
+<TD class="d0">
+<span class="FAILED"><span class="FORMATTED_MSG">The model 'UAV' must use an ert or ert-based target.</span></span></TD>
+</TR>
+<TR>
+<TD class="d0">
+<span class="FAILED"><span class="FORMATTED_MSG">The model 'UAV' must set its parameter 'StrictBusMsg' to one of the following values: ErrorOnBusTreatedAsVector</span></span></TD>
+</TR>
+<TR>
+<TD class="d0">
+<span class="FAILED"><span class="FORMATTED_MSG">The model 'UAV' must set its parameter 'NonBusSignalsTreatedAsBus' to one of the following values: 'error'</span></span></TD>
+</TR>
+</table><hr></body></html>

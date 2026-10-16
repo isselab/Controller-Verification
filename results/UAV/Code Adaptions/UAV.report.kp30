@@ -1,0 +1,41 @@
+states per second: 2625.65
+state count: 540283
+mips: 1.28199
+
+version: 4.4.2
+architecture: Intel(R) Core(TM) Ultra 7 155H
+memory used: 24877976
+physical memory used: 23929632
+user time: 173.889742
+system time: 26.833410
+wall time: 208.900230
+
+cycle timers (search):
+  smt-f: { mcycles: 0, hits: 0, kc-avg: 0 }
+  smt-eq: { mcycles: 0, hits: 0, kc-avg: 0 }
+  divm: { mcycles: 335854, hits: 1080466, kc-avg: 310 }
+  hash: { mcycles: 121326, hits: 1080465, kc-avg: 112 }
+input file: ../UAV.bc
+compile options:
+  - ../UAV.bc
+input options:
+  sys.0: "nofail:malloc"
+  divine.bcname: "../UAV.bc"
+dios config: fair
+lamp config: ""
+static reduction: 1
+property type: liveness
+
+timers:
+  lart: 0.847
+  loader: 0.997
+  boot: 0.085
+  search: 206
+  ce: 0.402
+cycle timers (ce):
+  smt-f: { mcycles: 0, hits: 0, kc-avg: 0 }
+  smt-eq: { mcycles: 0, hits: 0, kc-avg: 0 }
+  divm: { mcycles: 0, hits: 0, kc-avg: 0 }
+  hash: { mcycles: 0, hits: 0, kc-avg: 0 }
+
+error found: no

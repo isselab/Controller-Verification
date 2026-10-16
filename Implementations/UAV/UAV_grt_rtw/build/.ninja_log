@@ -1,0 +1,7 @@
+# ninja log v5
+956	1096	7651382799602076	UAV.exe	85b36d59ea623b9b
+26	471	7651382793802116	CMakeFiles/UAV_objects.dir/UAV.cpp.obj	c8042632fa111281
+30	443	7651382793532058	CMakeFiles/UAV.dir/C_/Program_Files/MATLAB/R2024b/rtw/c/src/common/rt_cppclass_main.cpp.obj	ad80fcdbfb888f47
+17	414	7651382793202069	CMakeFiles/UAV_objects.dir/UAV_data.cpp.obj	a33b7b950df965cd
+13	410	7651382793122063	CMakeFiles/UAV_objects.dir/rt_nonfinite.cpp.obj	7c9f10f148c97180
+2	956	7651382798651591	CMakeFiles/UAV_objects.dir/C_/Program_Files/MATLAB/R2024b/rtw/c/src/rt_logging.c.obj	9e775d80863dd097
