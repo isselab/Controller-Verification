@@ -1,0 +1,40 @@
+System specifications of the 
+
+Amazon
+
+-F450-type X quadcopter (HAWK'S WORK F450 Drone Frame, 450 mm Wheelbase Quadcopter Frame Kit with Landing Skids (Standard) )
+450mm span
+ Wheelbase: 450 mm
+Arm size: 215 x 38 x 50 mm
+Weight: 300 g (original version), 317 g (soldered version) 
+
+-Motor, Propeller, Actuator (KEESIN RC 1000KV Brushless Motor A2212 13T with 30A Brushless ESC Set 1045 Propeller CW CCW Accessories Kit Mount for RC Plane DJI F450 550 Quadcopter)
+Motor:
+        weight: 0.12 kg
+        shaft diameter: 6mm
+1045 Propeller:
+        Shaft diameter: 6 mm.
+        Adjustable with hole adapter (3mm, 3.2mm, 4mm, 5mm, 6mm, 6.35mm, 7.95mm)        
+
+-battery:
+        ZDF Lipo Batterie 11,1 V 2200mAh 30C für RC Trex 450 Feste-flügel Hubschrauber Quadcopter Flugzeug Auto Lipo 3s Bateria
+        170 ± 8g
+
+-ESP32WROOM: weight max 10g
+
+-MPU-6050: weight max 2g
+
+-cable: vernachlässigbar
+
+Overall weight:
+300g+4*120g+170g+15g
+
+Moments of Inertia:
+roll:
+central body (quader) = 1/12*m*(a^2+b^2)= 1/12*(0,1kg (body of frame) + 0,01kg (controller) + 0,17kg (battery))(0.18^2+0.1^2)=0.00098933333
+
+yaw:
+central body (quader) = 1/12*m*(a^2+b^2)= 1/12*(0,1kg (body of frame) + 0,01kg (controller) + 0,17kg (battery))(0.1^2+0.1^2)=0.00046666666
+
+
+
