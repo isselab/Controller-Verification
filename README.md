@@ -1,4 +1,4 @@
-# Mapping Control Theory and Software Engineering Properties
+# Case Studies for Verifying Control-Theoretic Properties in Code
 
 [Repo Content](#contents)  |  [Model Checking](#model-checking)  |  [Observer Intro](#observer)  |  [Contact Us](#contact)  
 
